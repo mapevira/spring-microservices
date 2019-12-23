@@ -34,6 +34,8 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
 test {
@@ -127,6 +129,10 @@ public class HelloWorldController {
  */
 package com.ibermatica.rest.webservices.restfulwebservices;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * The Hello World Bean.
  *
@@ -135,36 +141,16 @@ package com.ibermatica.rest.webservices.restfulwebservices;
  * @version 23 dic. 2019 12:51:58
  *
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HelloWorldBean {
 
     /** The message property.*/
     private String message;
 
-    public HelloWorldBean(String message) {
-        super();
-        this.message = message;
-    }
-
-    /**
-     * @return the message
-     */
-    public final String getMessage() {
-        return message;
-    }
-
-    /**
-     * @param message the message to set
-     */
-    public final void setMessage(String message) {
-        this.message = message;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("HelloWorldBean [message=%s]", message);
-    }
-
 }
+
 
 ```
 ---
