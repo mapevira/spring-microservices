@@ -4,6 +4,7 @@
 package com.ibermatica.rest.webservices.restfulwebservices;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,6 +35,15 @@ public class HelloWorldController {
     @GetMapping(path = "hello-world-bean")
     public HelloWorldBean helloWorldBean() {
         return new HelloWorldBean("Hello World!");
+    }
+
+    /**
+     * Get the hello world path variable.
+     * @return the hello world bean with the name passed
+     */
+    @GetMapping(path = "hello-world/path-variable/{name}")
+    public HelloWorldBean helloWorldPathVariable(@PathVariable String name) {
+        return new HelloWorldBean(String.format("Hi there, %s", name));
     }
 
 }
