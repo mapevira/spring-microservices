@@ -306,7 +306,7 @@ public class UserDaoService {
      * @param user the user to add
      * @return the user added
      */
-    public static synchronized User save(User user) {
+    public User save(User user) {
         if (user.getId() == null) {
             user.setId(++usersCount);
         }
@@ -348,6 +348,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -386,6 +388,10 @@ public class UserResource {
         return service.findOne(id);
     }
 
+    @PostMapping("/users")
+    public void createUser(@RequestBody User user) {
+        service.save(user);
+    }
 }
 
 ```

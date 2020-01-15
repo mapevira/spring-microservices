@@ -66,7 +66,7 @@ public class UserDaoService {
      * @param user the user to add
      * @return the user added
      */
-    public static synchronized User save(User user) {
+    public User save(User user) {
         if (user.getId() == null) {
             user.setId(++usersCount);
         }
