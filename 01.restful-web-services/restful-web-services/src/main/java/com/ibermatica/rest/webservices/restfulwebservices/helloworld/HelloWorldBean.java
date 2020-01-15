@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.ibermatica.rest.webservices.restfulwebservices;
+package com.ibermatica.rest.webservices.restfulwebservices.helloworld;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -76,15 +76,16 @@ public class RestfulWebServicesApplication {
 ```
 ---
 
-### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/HelloWorldController.java
+### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/helloworld/HelloWorldController.java
 
 ```java
 /**
  * 
  */
-package com.ibermatica.rest.webservices.restfulwebservices;
+package com.ibermatica.rest.webservices.restfulwebservices.helloworld;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -117,17 +118,26 @@ public class HelloWorldController {
         return new HelloWorldBean("Hello World!");
     }
 
+    /**
+     * Get the hello world path variable.
+     * @return the hello world bean with the name passed
+     */
+    @GetMapping(path = "hello-world/path-variable/{name}")
+    public HelloWorldBean helloWorldPathVariable(@PathVariable String name) {
+        return new HelloWorldBean(String.format("Hi there, %s", name));
+    }
+
 }
 
 ```
 ---
-### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/HelloWorldBean.java
+### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/helloworld/HelloWorldBean.java
 
 ```java
 /**
  * 
  */
-package com.ibermatica.rest.webservices.restfulwebservices;
+package com.ibermatica.rest.webservices.restfulwebservices.helloworld;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -150,7 +160,6 @@ public class HelloWorldBean {
     private String message;
 
 }
-
 
 ```
 ---
@@ -177,6 +186,149 @@ class RestfulWebServicesApplicationTests {
 
     @Test
     void contextLoads() {
+    }
+
+}
+
+```
+---
+
+### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/user/User.java
+
+```java
+/**
+ * 
+ */
+package com.ibermatica.rest.webservices.restfulwebservices.user;
+
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * The user entity.
+ *
+ * @author pvraul1
+ * @since 1.8
+ * @version 14 ene. 2020 17:01:55
+ *
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+
+    /** The user identifier property.*/
+    private Integer id;
+
+    /** The user name property.*/
+    private String name;
+
+    /** The user birthday property.*/
+    private Date birthDate;
+}
+
+```
+---
+
+### /src/main/java/com/ibermatica/rest/webservices/restfulwebservices/user/UserDaoService.java
+
+```java
+/**
+ * 
+ */
+package com.ibermatica.rest.webservices.restfulwebservices.user;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+/**
+ * The user DAO service.
+ *
+ * @author pvraul1
+ * @since 1.8
+ * @version 15 ene. 2020 8:53:59
+ *
+ */
+@Component
+public class UserDaoService {
+
+    /** The user list property.*/
+    private static List<User> users = new ArrayList<>();
+
+    /** The users count property.*/
+    private static int usersCount = 3;
+
+    static {
+        users.add(User.builder()
+                .id(Integer.valueOf(1))
+                .name("Adam")
+                .birthDate(new Date())
+                .build());
+
+        users.add(User.builder()
+                .id(Integer.valueOf(2))
+                .name("Eve")
+                .birthDate(new Date())
+                .build());
+
+        users.add(User.builder()
+                .id(Integer.valueOf(3))
+                .name("Jack")
+                .birthDate(new Date())
+                .build());
+    }
+
+    /** Create a new instance of the class.*/
+    private UserDaoService() {
+        super();
+    }
+
+    /**
+     * Get all the users.
+     *
+     * @return the users list
+     */
+    public List<User> findAll() {
+        return users;
+    }
+
+    /**
+     * Add a user.
+     *
+     * @param user the user to add
+     * @return the user added
+     */
+    public static synchronized User save(User user) {
+        if (user.getId() == null) {
+            user.setId(++usersCount);
+        }
+        users.add(user);
+
+        return user;
+    }
+
+    /**
+     * Get an user by identifier.
+     *
+     * @param id the user identifier
+     * @return the user 
+     */
+    public User findOne(int id) {
+        for (User user : users) {
+            if (user.getId().intValue() == id) {
+                return user;
+            }
+        }
+
+        return null;
     }
 
 }
