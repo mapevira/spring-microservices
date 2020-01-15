@@ -245,6 +245,7 @@ package com.ibermatica.rest.webservices.restfulwebservices.user;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -331,6 +332,25 @@ public class UserDaoService {
         return null;
     }
 
+    /**
+     * Remove de user by id.
+     *
+     * @param id the identifier
+     * @return the removed user
+     */
+    public User deleteById(int id) {
+        Iterator<User> iterator = users.iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            if (user.getId().intValue() == id) {
+                iterator.remove();
+                return user;
+            }
+        }
+
+        return null;
+    }
+
 }
 
 ```
@@ -349,6 +369,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -414,6 +435,21 @@ public class UserResource {
             .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    /**
+     * Remove an user.
+     *
+     * @param id the user identifier
+     * @return the user
+     */
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id) {
+        User user = service.deleteById(id);
+        if (user == null) {
+            throw new UserNotFoundException("id-" + id);
+        }
+
     }
 
 }
