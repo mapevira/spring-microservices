@@ -203,6 +203,9 @@ package com.ibermatica.rest.webservices.restfulwebservices.user;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -226,10 +229,13 @@ public class User {
     private Integer id;
 
     /** The user name property.*/
+    @Size(min = 2, message = "Name should have atleast 2 characters")
     private String name;
 
     /** The user birthday property.*/
+    @Past
     private Date birthDate;
+
 }
 
 ```
@@ -367,6 +373,8 @@ package com.ibermatica.rest.webservices.restfulwebservices.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -425,7 +433,7 @@ public class UserResource {
      * @return the response entity
      */
     @PostMapping("/users")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
         User savedUser = service.save(user);
 
         URI location = ServletUriComponentsBuilder
@@ -504,8 +512,10 @@ package com.ibermatica.rest.webservices.restfulwebservices.exception;
 
 import java.util.Date;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -533,7 +543,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 .message(ex.getMessage())
                 .details(request.getDescription(false))
                 .build();
-        
+
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -544,8 +554,21 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 .message(ex.getMessage())
                 .details(request.getDescription(false))
                 .build();
-        
+
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .timestamp(new Date())
+                .message("Validation Failed")
+                .details(ex.getBindingResult().toString())
+                .build();
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
 }

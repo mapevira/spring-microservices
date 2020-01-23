@@ -93,7 +93,7 @@ public class UserDaoService {
     }
 
     /**
-     * Remove de user by id.
+     * Remove the user by id.
      *
      * @param id the identifier
      * @return the removed user

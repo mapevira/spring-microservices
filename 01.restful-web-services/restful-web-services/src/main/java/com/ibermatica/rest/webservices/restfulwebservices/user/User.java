@@ -5,6 +5,9 @@ package com.ibermatica.rest.webservices.restfulwebservices.user;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +31,11 @@ public class User {
     private Integer id;
 
     /** The user name property.*/
+    @Size(min = 2, message = "Name should have at least 2 characters")
     private String name;
 
     /** The user birthday property.*/
+    @Past
     private Date birthDate;
+
 }
