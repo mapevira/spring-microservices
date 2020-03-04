@@ -15,7 +15,7 @@ node {
     stage('sonar-scanner') {
       def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
       withCredentials([string(credentialsId: 'sonarqube', variable: 'sonarLogin')]) {
-        sh "${sonarqubeScannerHome}/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=gs-gradle -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GS -Dsonar.sources=01.restful-web-services/restful-web-services/src/main/ -Dsonar.tests=01.restful-web-services/restful-web-services/src/test/ -Dsonar.language=java -Dsonar.java.binaries=."
+        sh "${sonarqubeScannerHome}/bin/sonar-scanner -e -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=restful-web-services -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GS -Dsonar.sources=01.restful-web-services/restful-web-services/src/main/ -Dsonar.tests=01.restful-web-services/restful-web-services/src/test/ -Dsonar.language=java -Dsonar.java.binaries=."
       }
     }
 }
